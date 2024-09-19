@@ -15,10 +15,12 @@ const server = http.createServer(async (req, res) => {
         buffers.push(chunk)
     }
 
-    // Transformando o objeto mandado pelo Insomnia em JSON, assim podendo lêr ele em diversas outras partes do código.
-    const body = JSON.parse(Buffer.concat(buffers).toString())
-
-    console.log(body.name)
+    try {
+        // Transformando o objeto mandado pelo Insomnia em JSON, assim podendo lêr ele em diversas outras partes do código.
+        req.body = JSON.parse(Buffer.concat(buffers).toString())
+    } catch {
+        req.body = null
+    }
 
     // Se o método for Get, e a Url /users, ele retorna o conteúdo feito externamente.
     if(method == 'GET' && url == "/users") {
@@ -31,10 +33,12 @@ const server = http.createServer(async (req, res) => {
 
     // Se for POST, ele retorna o usuário John Doe.
     if(method == "POST" && url == "/users") {
+        const { name, email } = body
+
         users.push({
             id: 1,
-            name:"John Doe",
-            email: "johndoe@example.com"
+            name,
+            email,
         })
 
         // Na resposta, escreve que o código de status da req foi de 201 ( Ocorreu tudo bem ).
