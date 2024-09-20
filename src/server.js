@@ -1,6 +1,7 @@
 import http from "node:http";
 import { json } from "./middlewares/json.js";
 import { routes } from "./routes.js";
+import { ExtractQueryParams } from "./utils/extract-query-params.js";
 
 const server = http.createServer(async (req, res) => {
     // Mostra os dois fatores que serão usados ao redor do código na parte de requisição, sendo eles o método e o endereço da página.
@@ -15,7 +16,12 @@ const server = http.createServer(async (req, res) => {
     if (route) {
         const routeParams = req.url.match(route.path)
 
-        req.params = { ...routeParams.groups }
+        console.log(ExtractQueryParams(routeParams.groups.query))
+
+        const { query, ...params } = routeParams.groups
+
+        req.params = params
+        req.query = query ? ExtractQueryParams(query) : {}
 
         return route.handler(req, res)
     }
