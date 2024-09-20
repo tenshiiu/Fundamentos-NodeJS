@@ -1,9 +1,9 @@
 import http from "node:http";
 import { json } from "./middlewares/json.js";
-import { DataBase } from "./middlewares/database.js";
+import { Database } from "./middlewares/database.js";
 
 // Determina que a variável usuários é um array.
-const database = new DataBase()
+const database = new Database()
 
 
 
@@ -26,7 +26,7 @@ const server = http.createServer(async (req, res) => {
 
     // Se for POST, ele retorna o usuário John Doe.
     if(method == "POST" && url == "/users") {
-        const { name, email } = body
+        const { name, email } = body;
 
         const user = ({
             id: 1,
