@@ -1,6 +1,6 @@
-import { Database } from "./middlewares/database";
 import { randomUUID } from "node:crypto";
 import { buildRoutePath } from "./utils/build-route-path";
+import { Database } from "./middlewares/database";
 
 const database = new Database
 

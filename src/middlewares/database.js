@@ -6,11 +6,11 @@ console.log(databasePath)
 
 export class Database {
     // Se eu usar #database, eu consigo privar esta propriedade apenas pro código local
-    #database = {}
+    database = {}
 
     constructor() {
         fs.readFile(databasePath, "utf8").then(data => {
-            this.#database = JSON.parse(data)
+            this.database = JSON.parse(data)
         })
         .catch(() => {
             this.#persist()
@@ -18,11 +18,11 @@ export class Database {
     }
 
     #persist() {
-        fs.writeFile(databasePath, JSON.stringify(this.#database))
+        fs.writeFile(databasePath, JSON.stringify(this.database))
     }
 
     select(table, search) {
-        let data = this.#database[table] ?? []
+        let data = this.database[table] ?? []
 
         if (search) {
             data = data.filter(row => {
@@ -37,10 +37,10 @@ export class Database {
     }
 
     insert(table, data) {
-        if (Array.isArray(this.#database[table])) {
-            this.#database[table].push(data)
+        if (Array.isArray(this.database[table])) {
+            this.database[table].push(data)
         } else {
-            this.#database[table] = [data]
+            this.database[table] = [data]
         }
 
         this.#persist();
@@ -49,19 +49,19 @@ export class Database {
     }
 
     update(table, id, data) {
-        const rowIndex = this.#database[table].findIndex(row => row.id == id)
+        const rowIndex = this.database[table].findIndex(row => row.id == id)
 
         if (rowIndex > -1) {
-            this.#database[table][rowIndex] = { id, ...data }
+            this.database[table][rowIndex] = { id, ...data }
             this.#persist()
         }
     }
 
     delete(table, id) {
-        const rowIndex = this.#database[table].findIndex(row => row.id == id)
+        const rowIndex = this.database[table].findIndex(row => row.id == id)
 
         if (rowIndex > -1) {
-            this.#database[table].splice(rowIndex, 1)
+            this.database[table].splice(rowIndex, 1)
             this.#persist()
         }
     }
